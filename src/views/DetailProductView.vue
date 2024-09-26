@@ -57,7 +57,7 @@ import { getProductImage } from "@/helpers/getImage"; // Import hàm getProductI
       selectedQuantity.value++
     }
   }
-  //Hàm giảm số lượng
+  //Hàm giảm số lượng sản phẩm
   const decreaseQuantity =()=>{
     if(selectedQuantity.value>1){
       selectedQuantity.value--;
