@@ -47,7 +47,7 @@ watch(
             <div class="product-image">
               <img
                 :src="
-                  getProductImage(product.images[0]?.image) ||
+                  getProductImage(product.images?.[0].image) ||
                   'path/to/default/image.jpg'
                 "
                 alt="Product Image"

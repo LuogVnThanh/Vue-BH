@@ -1,12 +1,15 @@
 <template>
     <div class="container DetailProduct" v-if="selectedProduct">
-      <div class="ImgProduct">
-        <a href="">
-          <img
+      <div class="ImgProduct" >
+        <a href="" >
+          <!-- <img
             src="https://bulma.io/assets/images/placeholders/1280x960.png"
             alt="ProductImage"
-          />
-          
+          /> -->
+          <img :src="getProductImage(selectedProduct.images?.[0].image)" alt="ProductImage" 
+          style="height: 600px;
+          width: auto;
+          object-fit: contain;" >
         </a>
       </div>
       <div class="InfoProduct" >
@@ -22,9 +25,9 @@
           <!-- Btn tăng -->
           <button @click="increaseQuantity" :disabled="selectedProduct===selectedProduct.quantity"> + </button>
         </div>
-        <div  >
+        <router-link :to="{name: 'Cart'}" >        
             <button class="confirm-btn">Xác nhận</button>
-        </div>
+        </router-link>
       </div>
     </div>
   </template>

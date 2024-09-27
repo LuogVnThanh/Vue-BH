@@ -26,9 +26,9 @@ const formatCurrency = (value) => {
       <!-- Div tổng chứa sản phẩm -->
       <div class="product-container" v-for="prod in products" :key="prod.id">
         <!-- Div chứa hình ảnh sản phẩm -->
-        <div class="product-image">
-          <!-- Cụ thể, bạn đang cố gắng truy cập thuộc tính prod.images.image?.[0], nhưng prod.images là một mảng các đối tượng hình ảnh, nên bạn cần truy cập vào đối tượng đầu tiên trong mảng. -->
-          <img :src="getProductImage(prod.images[0]?.image) || 'path/to/default/image.jpg'" alt="Product Image" />
+        <div class="product-image"  >
+          <!-- Cụ thể, bạn đang cố gắng truy cập thuộc tính prod.images?.[0].image), nhưng prod.images là một mảng các đối tượng hình ảnh, nên bạn cần truy cập vào đối tượng đầu tiên trong mảng. -->
+          <img :src="getProductImage(prod.images?.[0].image) || 'path/to/default/image.jpg'" alt="Product Image" />
           <!-- <div>Id: {{ prod.id }}</div> -->
           
           <!-- Nút Mua ngay và Chi tiết khi hover vào ảnh -->

@@ -11,7 +11,7 @@ onMounted(() => {
 
 <template>
   <NavbarComponentVue />
-  <div class="routerview" style="margin-top: 100px;">
+  <div class="routerview" style="margin-top: 75px;">
     <RouterView />
 
   </div>
