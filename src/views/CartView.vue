@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <!-- title -->
-    <p class="title">Thông tin giỏ hàng của bạn</p>
+    <p class="title" style="  background-color: #bdbdbd;
+  font-size: 24px;
+  padding: 10px;">Thông tin giỏ hàng của bạn</p>
     <div class="row">
       <div class="col-12 mb-2">
         <!-- Freeship title -->
@@ -25,139 +27,43 @@
       >
         <h4 style="text-transform: uppercase">Chi tiết đơn hàng</h4>
         <!-- Danh sách hàng -->
-        <h6>Có tổng 2 sản phẩm:</h6>
+        <h6>Có tổng {{ totalItems }} sản phẩm:</h6>
         <table class="table" style="color: #111; width: 100%">
           <tbody>
             <!-- Sản phẩm 1 -->
-            <tr>
-              <td style="width: 100px; padding-left: 0; padding-right: 0">
+            <tr v-for=" cartItem in cartItems" :key="cartItem.id">
+              <td style="width: 100px; ">
                 <!-- Ảnh sản phẩm 1 -->
                 <img
-                  class="img-fluid"
-                  src="https://cdn2.yame.vn/pimg/cart-thumb/8e5304f3-11d1-3300-b16a-001b810e8341.jpg?w=70&amp;h=100&amp;c=true"
-                  alt="Product 1"
+                  class="img-fluid" style="height:100px;width: 100px;"
+                  :src="getProductImage(cartItem.images?.[0].image)"
+                  alt="Product 1"  
                 />
                 <!-- Nút xóa sản phẩm 1 -->
                 <div>
-                  <a href="#" style="color: #000; text-decoration: none">
+                  <a href="#" style="color: #000; text-decoration: none" @click="removeItem(cartItem.id)">
                     <i class="bi bi-trash3" style="padding: 5px"></i>Xóa
                   </a>
                 </div>
               </td>
-              <td style="padding-left: 0; padding-right: 0">
+              <!-- style="padding-left: 0; padding-right: 0" -->
+              <td >
                 <p class="mb-1">
                   <a
                     href="#"
-                    style="font-size: 14px; color: #000; text-decoration: none"
+                    style="font-size: 20px; color: #000; text-decoration: none"
                   >
-                    Áo Thun Cổ Tròn Tay Ngắn Sợi Nhân Tạo Co Giãn Biểu Tượng
-                    Dáng Vừa Giá Tốt Seventy Seven 41 Vol 24 - Xám, S
+                    {{ cartItem.description }}
                   </a>
                 </p>
                 <p class="mb-0">
-                  <span>Số lượng: <b>1</b></span> *
-                  <span class="text-black">177,000 đ</span>
+                  <span>Số lượng:{{ cartItem.quantity }} <b></b></span> *
+                  <span class="text-black">{{ formatCurrency(cartItem.price*0.7) }}</span>
                 </p>
-                <p class="mb-0"><b>= 177,000 đ</b></p>
+                <p class="mb-0"><b>= {{ formatCurrency(cartItem.price*0.7* cartItem.quantity) }}</b></p>
               </td>
             </tr>
 
-            <!-- Sản phẩm 2 -->
-            <tr>
-              <td style="width: 100px; padding-left: 0; padding-right: 0">
-                <!-- Ảnh sản phẩm 2 -->
-                <img
-                  class="img-fluid"
-                  src="https://cdn2.yame.vn/pimg/cart-thumb/8e5304f3-11d1-3300-b16a-001b810e8341.jpg?w=70&amp;h=100&amp;c=true"
-                  alt="Product 2"
-                />
-                <!-- Nút xóa sản phẩm 2 -->
-                <div>
-                  <a href="#" style="color: #000; text-decoration: none">
-                    <i class="bi bi-trash3" style="padding: 5px"></i>Xóa
-                  </a>
-                </div>
-              </td>
-              <td style="padding-left: 0; padding-right: 0">
-                <p class="mb-1">
-                  <a
-                    href="#"
-                    style="font-size: 14px; color: #000; text-decoration: none"
-                  >
-                    Áo Polo Cotton Nam Thoáng Mát Phối Chỉ Tinh Tế - Xanh, M
-                  </a>
-                </p>
-                <p class="mb-0">
-                  <span>Số lượng: <b>1</b></span> *
-                  <span class="text-black">230,000 đ</span>
-                </p>
-                <p class="mb-0"><b>= 230,000 đ</b></p>
-              </td>
-            </tr>
-            <!-- Sản phẩm 3  -->
-            <tr>
-              <td style="width: 100px; padding-left: 0; padding-right: 0">
-                <!-- Ảnh sản phẩm 2 -->
-                <img
-                  class="img-fluid"
-                  src="https://cdn2.yame.vn/pimg/cart-thumb/8e5304f3-11d1-3300-b16a-001b810e8341.jpg?w=70&amp;h=100&amp;c=true"
-                  alt="Product 2"
-                />
-                <!-- Nút xóa sản phẩm 2 -->
-                <div>
-                  <a href="#" style="color: #000; text-decoration: none">
-                    <i class="bi bi-trash3" style="padding: 5px"></i>Xóa
-                  </a>
-                </div>
-              </td>
-              <td style="padding-left: 0; padding-right: 0">
-                <p class="mb-1">
-                  <a
-                    href="#"
-                    style="font-size: 14px; color: #000; text-decoration: none"
-                  >
-                    Áo Polo Cotton Nam Thoáng Mát Phối Chỉ Tinh Tế - Xanh, M
-                  </a>
-                </p>
-                <p class="mb-0">
-                  <span>Số lượng: <b>1</b></span> *
-                  <span class="text-black">230,000 đ</span>
-                </p>
-                <p class="mb-0"><b>= 230,000 đ</b></p>
-              </td>
-            </tr>
-            <!-- Sản phẩm 4  -->
-            <tr>
-              <td style="width: 100px; padding-left: 0; padding-right: 0">
-                <!-- Ảnh sản phẩm 2 -->
-                <img
-                  class="img-fluid"
-                  src="https://cdn2.yame.vn/pimg/cart-thumb/8e5304f3-11d1-3300-b16a-001b810e8341.jpg?w=70&amp;h=100&amp;c=true"
-                  alt="Product 2"
-                />
-                <!-- Nút xóa sản phẩm 2 -->
-                <div>
-                  <a href="#" style="color: #000; text-decoration: none">
-                    <i class="bi bi-trash3" style="padding: 5px"></i>Xóa
-                  </a>
-                </div>
-              </td>
-              <td style="padding-left: 0; padding-right: 0">
-                <p class="mb-1">
-                  <a
-                    href="#"
-                    style="font-size: 14px; color: #000; text-decoration: none"
-                  >
-                    Áo Polo Cotton Nam Thoáng Mát Phối Chỉ Tinh Tế - Xanh, M
-                  </a>
-                </p>
-                <p class="mb-0">
-                  <span>Số lượng: <b>1</b></span> *
-                  <span class="text-black">230,000 đ</span>
-                </p>
-                <p class="mb-0"><b>= 230,000 đ</b></p>
-              </td>
-            </tr>
 
             <!--   giao hàng -->
             <tr>
@@ -165,7 +71,8 @@
                 Giao hàng:
               </td>
               <td>
-                <div style="font-size: 16px; color: #f00">19,000 đ</div>
+                <div v-if="isFreeShipping" style="font-size: 16px; color: #28a745">Miễn phí (-19,000đ)</div>
+                <div v-else style="font-size: 16px; color: #f00">19,000 đ</div>
                 <div style="font-size: 16px; color: #111">
                   * Miễn phí với đơn hàng từ <b>300,000 đ</b>.
                 </div>
@@ -178,8 +85,8 @@
                 Tổng cộng:
               </td>
               <td>
-                <div id="grandTotal" style="font-size: 16px; color: #f00">
-                  <b>426,000 đ</b>
+                <div id="grandTotal" style="font-size: 20px; color: #f00;  ">
+                  <b>{{ formatCurrency(grandTotal) }} </b>
                 </div>
               </td>
             </tr>
@@ -260,12 +167,45 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useCartStore } from "@/stores/cartStore/cartStore";
+import { storeToRefs } from "pinia";
+import { getProductImage } from "@/helpers/getImage"; // Import hàm getProductImage
+import { computed,onMounted,ref } from "vue";
 
-<style scoped>
-.title {
-  background-color: #bdbdbd;
-  font-size: 24px;
-  padding: 10px;
+
+
+const cartStore = useCartStore();
+const {cartItems, totalPrice,totalItems} = storeToRefs(cartStore)
+
+  //Đổi dạng tiền
+  const formatCurrency = (value) => {
+  return `${parseInt(value).toLocaleString("vi-VN")} VND`;
+};
+
+
+//Nút xóa
+const removeItem =(id)=>{
+  cartStore.removeItem(id)
+  console.log("object,id",id);
 }
-</style>
+
+//Kiểm tra xem nếu tổng lớn hơn 300.000k
+const isFreeShipping= computed(()=>{
+  return totalPrice.value > 300000
+})
+//Tính tổng tiền với phí giao hàng
+const shippingFee = computed(()=>{
+  return isFreeShipping.value? 0 : 19000
+
+})  
+const grandTotal = computed(()=>{
+  return totalPrice.value +  shippingFee.value
+})
+
+onMounted(()=>{
+  cartStore.getCartItems()
+})
+</script>
+
+ 

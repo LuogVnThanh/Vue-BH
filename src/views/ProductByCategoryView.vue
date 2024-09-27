@@ -11,6 +11,7 @@ const productStore = useProductStore();
 
 const { selectedCategory } = storeToRefs(productStore);
 
+
 const formatCurrency = (value) => {
   return `${parseInt(value).toLocaleString("vi-VN")} VND`;
 };
