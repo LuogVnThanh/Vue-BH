@@ -5,7 +5,7 @@ import { useAuthStore } from "./stores/authStore/authStore";
 
 const authStore = useAuthStore();
 onMounted(() => {
-  authStore.restoreSesstion();
+  authStore.restoreSession();
 });
 </script>
 

@@ -12,8 +12,8 @@ export const useAuthStore = defineStore("authStore", {
 
   getters: {
     isAuthenticated: (state) => !!state.access_token,
-    isAdmin: (state) => state.customer?.role_id === "Admin",
-    isUser: (state) => state.customer?.role_id === "User",
+    isAdmin: (state) => state.customer?.role_id === 1,
+    isUser: (state) => state.customer?.role_id === 2,
   },
   actions: {
     // Gọi hàm restoreSession trong khởi tạo
@@ -21,7 +21,7 @@ export const useAuthStore = defineStore("authStore", {
       this.restoreSession();
     },
 
-    //function login
+    //===========function login===================
     async Login(email, password) {
       try {
         const response = await axiosInstance.post("/auth/login", {
@@ -30,7 +30,7 @@ export const useAuthStore = defineStore("authStore", {
         });
 
         // Kiểm tra cấu trúc của response.data
-        console.log("Response Data:", response.data);
+        // console.log("Response Data:", response.data);
 
         this.access_token = response.data.access_token;
 
@@ -42,13 +42,12 @@ export const useAuthStore = defineStore("authStore", {
 
           //Decode JWT để lấy thông tin `sub`
           const decodedToken = jwtDecode(response.data.access_token);
-          console.log("objectdecodetoken", decodedToken);
+          // console.log("objectdecodetoken", decodedToken);
           const customerInfo = await this.GetProfile();
-          console.log("objectinfo", customerInfo);
+          // console.log("objectinfo", customerInfo);
           this.customer = customerInfo;
           localStorage.setItem("customer", JSON.stringify(this.customer)); // Lưu thông tin customer vào localStorage
 
-          console.log("Stored AccessToken:", this.access_token);
 
           // Điều hướng về trang Home sau khi đăng nhập thành công
           router.push({ name: "Home" });
@@ -61,7 +60,42 @@ export const useAuthStore = defineStore("authStore", {
       }
     },
 
-    //functon getProfile
+    //===========function register================
+    async Register(name,email,password){
+      try{
+        const response = await axiosInstance.post("/auth/register", {
+          name: name,
+          email: email,
+          password: password,
+        });
+        if (response.status === 201) {
+          router.push({ name: "Login" });
+          alert("Đăng ký thành công");
+
+          return { success: true };
+        } else {
+          console.log('status: ' + response.status);
+          return { success: false, error: "Đăng ký thất bại" };
+        }
+        // this.Login(email, password);
+ 
+
+      } catch (error) {
+        console.error("Chi tiết lỗi:", error.response ? error.response.data : error.message);
+        if (error.response && error.response.status === 500) {
+          throw new Error('Email đã tồn tại.');
+        } 
+        // else if (error.response && error.response.status === 500) {
+        //   throw new Error('Có lỗi xảy ra từ phía server.');
+        // }
+         else {
+          throw new Error(error.response?.data?.message || 'Đăng ký thất bại.');
+        }
+      }
+      
+    },
+
+    //========functon getProfile==================
     async GetProfile() {
       try {
         const response = await axiosInstance.get("/auth/profile");
@@ -71,9 +105,10 @@ export const useAuthStore = defineStore("authStore", {
       }
     },
 
-    //function logout
+    //=============function logout================
     async Logout() {
       localStorage.removeItem("access_token", this.access_token);
+      localStorage.removeItem('cartItems',)
       localStorage.removeItem("customer", this.customer); // Xóa thông tin khách hàng
       this.access_token = null;
       this.customer = null;
@@ -87,12 +122,13 @@ export const useAuthStore = defineStore("authStore", {
       router.push({ name: routeName });
     },
 
-    //function refesh trang
-    restoreSesstion() {
+
+    //==========function refesh trang================================
+    restoreSession() {
       try {
         const access_token = localStorage.getItem("access_token");
         const customer = JSON.parse(localStorage.getItem("customer")); // Khôi phục customer từ localStorage
-
+ 
         if (access_token && customer) {
           this.access_token = access_token;
           this.customer = customer; // Cập nhật thông tin khách hàng

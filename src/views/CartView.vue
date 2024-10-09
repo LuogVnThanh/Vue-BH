@@ -203,8 +203,10 @@ const grandTotal = computed(()=>{
   return totalPrice.value +  shippingFee.value
 })
 
+//lấy thông tin người nhận
+
 onMounted(()=>{
-  cartStore.getCartItems()
+   cartStore.loadCartFromLocalStorage()
 })
 </script>
 

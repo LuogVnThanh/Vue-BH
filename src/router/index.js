@@ -7,6 +7,8 @@ import Login from '../components/LoginComponent.vue'
 import Register from '../components/RegisterComponent.vue'
 import Profile from '../views/ProfileView.vue'
 import Cart from '../views/CartView.vue'
+import DashBoard from '../views/Dashboard.vue'
+
 
 
 
@@ -43,6 +45,13 @@ const router = createRouter({
       path: '/cart',
       name: 'Cart',
       component: Cart
+    },
+    {
+      path : '/dashboard',
+      name: 'Dashboard',
+      component: DashBoard
+ 
+
     },
  
     {

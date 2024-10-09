@@ -4,10 +4,12 @@ import { storeToRefs } from "pinia";
 import { onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getProductImage } from "@/helpers/getImage"; // Import hàm getProductImage
+import { useCartStore } from "@/stores/cartStore/cartStore"; // Đảm bảo rằng bạn đã nhập cartStore
 
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
+const cartStore = useCartStore();
 
 const { selectedCategory } = storeToRefs(productStore);
 
@@ -19,6 +21,21 @@ onMounted(() => {
   const id = route.params.id;
   productStore.getProductByCategory(id);
 });
+
+//-------------Hàm Mua Ngay---------------
+const buyNow = (product) => {
+  // Thêm sản phẩm vào giỏ hàng với số lượng 1
+  
+  cartStore.addToCart(product, 1);
+  
+  // Chuyển đến trang Cart
+  router.push({ name: 'Cart' });
+
+  // Thông báo đã thêm sản phẩm vào giỏ hàng
+  alert("Đã thêm sản phẩm vào giỏ hàng!");
+};
+
+
 
 //Sử dụng watch để lắng nghe các thay đổi của route.params.id và thực hiện một hành động mỗi khi giá trị này thay đổi:
 watch(
@@ -56,7 +73,7 @@ watch(
 
               <!-- Nút Mua ngay và Chi tiết khi hover vào ảnh -->
               <div class="product-buttons">
-                <button>Mua Ngay</button>
+                <button @click="buyNow(product)">Mua Ngay</button>
                 <RouterLink
                   :to="{ name: 'DetailProduct', params: { id: product.id } }"
                   ><button>Chi Tiết</button></RouterLink
@@ -131,7 +148,7 @@ watch(
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 /* Nút Mua Ngay và Chi Tiết chỉ hiển thị khi hover */

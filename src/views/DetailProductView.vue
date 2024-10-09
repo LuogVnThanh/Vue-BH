@@ -7,9 +7,10 @@
             alt="ProductImage"
           /> -->
         <img
+           
           :src="getProductImage(selectedProduct.images?.[0].image)"
           alt="ProductImage"
-          style="height: 600px; width: auto; object-fit: contain"
+          style="height: 450px; width: 100%; object-fit: contain"
         />
       </a>
     </div>
@@ -90,8 +91,8 @@ const addToCart = () => {
     const quantity = selectedQuantity.value;
     cartStore.addToCart(selectProduct, quantity);
 
-    // Thông báo đã thêm vào gi�� hàng
-    alert("Đã thêm sản phẩm vào gi�� hàng!");
+    // Thông báo đã thêm vào giỏ hàng
+    alert("Đã thêm sản phẩm vào giỏ hàng!");
   }
   console.log(cartStore.cartItems);
 };
@@ -111,8 +112,7 @@ const addToCart = () => {
 }
 
 .ImgProduct img {
-  width: 100%;
-  height: auto;
+ 
   border-radius: 10px; /* Bo góc hình ảnh */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng cho ảnh */
 }
@@ -170,6 +170,7 @@ const addToCart = () => {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  
 }
 
 .confirm-btn:hover {

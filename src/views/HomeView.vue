@@ -1,65 +1,112 @@
-<script setup>
-import { useProductStore } from "@/stores/productStore/productStore";
-import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { getProductImage } from "@/helpers/getImage"; // Import hàm getProductImage
+  <script setup>
+  import { useProductStore } from "@/stores/productStore/productStore";
+  import { storeToRefs } from "pinia";
+  import { onMounted } from "vue";
+  import { useRouter } from "vue-router";
+  import { useCartStore } from "@/stores/cartStore/cartStore"; // Đảm bảo rằng bạn đã nhập cartStore
+  import { getProductImage } from "@/helpers/getImage"; // Import hàm getProductImage
 
-const productStore = useProductStore();
-const router = useRouter()
-const  {products} = storeToRefs(productStore)
+  const productStore = useProductStore();
+  const cartStore = useCartStore(); // Khai báo cartStore
+  const router = useRouter()
+  const  {products, currentPage, totalPage} = storeToRefs(productStore)
 
-onMounted(() => {
-  productStore.getAllProducts();
-});
+  //-------------Hàm Mua Ngay---------------
+  const buyNow = (product) => {
+    // Thêm sản phẩm vào giỏ hàng với số lượng 1
+    
+    cartStore.addToCart(product, 1);
+    
+    // Chuyển đến trang Cart
+    router.push({ name: 'Cart' });
 
-// Hàm format tiền
-const formatCurrency = (value) => {
-  return `${parseInt(value).toLocaleString('vi-VN')} VND`;
-};
-</script>
+    // Thông báo đã thêm sản phẩm vào giỏ hàng
+    alert("Đã thêm sản phẩm vào giỏ hàng!");
+  };
 
-<template>
-    <div class="container" >
-        <!-- Div chính chứa tất cả sản phẩm -->
-    <div class="product-list">
-      <!-- Div tổng chứa sản phẩm -->
-      <div class="product-container" v-for="prod in products" :key="prod.id">
-        <!-- Div chứa hình ảnh sản phẩm -->
-        <div class="product-image"  >
-          <!-- Cụ thể, bạn đang cố gắng truy cập thuộc tính prod.images?.[0].image), nhưng prod.images là một mảng các đối tượng hình ảnh, nên bạn cần truy cập vào đối tượng đầu tiên trong mảng. -->
-          <img :src="getProductImage(prod.images?.[0].image) || 'path/to/default/image.jpg'" alt="Product Image" />
-          <!-- <div>Id: {{ prod.id }}</div> -->
-          
-          <!-- Nút Mua ngay và Chi tiết khi hover vào ảnh -->
-          <div class="product-buttons">
-            <button>Mua Ngay</button>
-            <RouterLink :to="{name:'DetailProduct',params: { id: prod.id }}"><button>Chi Tiết</button></RouterLink>
+  //---------Hàm format tiền-----
+  const formatCurrency = (value) => {
+    return `${parseInt(value).toLocaleString('vi-VN')} VND`;
+  };
+  // =============Phân trang===============
+  const fetchProduct = async()=>{
+    //  console.log("Fetching products for page:", currentPage.value);
+    currentPage.value= localStorage.getItem("currentPage")
+    await productStore.getProductsByPage(currentPage.value)
+  }
+
+  // Hàm chuyển trang về trước
+  const prevPage = ()=>{
+    if( currentPage.value > 1){
+      productStore.getProductsByPage( currentPage.value - 1);
+      localStorage.setItem("currentPage",currentPage.value -1 )
+    }
+  }
+  const nextPage = ()=>{
+    if( currentPage.value   <  totalPage.value){
+      productStore.getProductsByPage( currentPage.value + 1);
+      localStorage.setItem("currentPage",currentPage.value +1 )
+    }
+  }
+  //----------OnMounted-----------------------
+  onMounted(() => {
+    // productStore.getAllProducts();
+    // console.log("Component mounted"); // Kiểm tra xem component có được mount không
+    fetchProduct();
+    
+  });
+
+
+  </script>
+
+  <template>
+      <div class="container" >
+          <!-- Div chính chứa tất cả sản phẩm -->
+      <div class="product-list">
+        <!-- Div tổng chứa sản phẩm -->
+        <div class="product-container" v-for="prod in products" :key="prod.id">
+          <!-- Div chứa hình ảnh sản phẩm -->
+          <div class="product-image"  >
+            <!-- Cụ thể, bạn đang cố gắng truy cập thuộc tính prod.images?.[0].image), nhưng prod.images là một mảng các đối tượng hình ảnh, nên bạn cần truy cập vào đối tượng đầu tiên trong mảng. -->
+            <img :src="getProductImage(prod.images?.[0].image)" alt="Product Image" />
+            <!-- <div>Id: {{ prod.id }}</div> --> 
+            
+            <!-- Nút Mua ngay và Chi tiết khi hover vào ảnh -->
+            <div class="product-buttons">
+              <button @click="buyNow(prod)">Mua Ngay</button>
+              <RouterLink :to="{name:'DetailProduct',params: { id: prod.id }}"><button>Chi Tiết</button></RouterLink>
+            </div>
           </div>
-        </div>
 
-        <!-- Thông tin sản phẩm: tên và giá -->
-        <div class="product-info">
-          <div class="product-name">{{ prod.name }}</div>
-          <div class="product-price">
-            <!-- Giá gốc (gạch ngang) -->
-            <span class="original-price">{{formatCurrency( prod.price )}}  </span>
-            <!-- Giá đã giảm (giảm 30%) -->
-            <span class="discounted-price" style="color: rgb(67, 67, 67);">{{ formatCurrency(prod.price * 0.7) }} </span>
+          <!-- Thông tin sản phẩm: tên và giá -->
+          <div class="product-info">
+            <div class="product-name">{{ prod.name }}</div>
+            <div class="product-price">
+              <!-- Giá gốc (gạch ngang) -->
+              <span class="original-price">{{formatCurrency( prod.price )}}  </span>
+              <!-- Giá đã giảm (giảm 30%) -->
+              <span class="discounted-price" style="color: rgb(67, 67, 67);">{{ formatCurrency(prod.price * 0.7) }} </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    </div>
+          <!-- Phân trang -->
+      <div class="pagination">
+  <button @click="prevPage" :disabled="currentPage <= 1">Trước</button>
+  <button @click="nextPage" :disabled="currentPage >= totalPage">Sau</button>
+      </div>
 
-</template>
+      </div>
+
+  </template>
 
 <style scoped>
 /* Div chính chứa tất cả sản phẩm */
 .product-list {
   display: flex;
   flex-wrap: wrap; /* Cho phép các sản phẩm xuống hàng khi không đủ chỗ */
-  /* justify-content: space-between; Giãn đều các sản phẩm */
+   justify-content: space-between; /*Giãn đều các sản phẩm */
+  
   gap: 25px; /* Khoảng cách giữa các sản phẩm */
 }
 
@@ -93,7 +140,7 @@ const formatCurrency = (value) => {
 .product-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 /* Nút Mua Ngay và Chi Tiết chỉ hiển thị khi hover */
@@ -160,4 +207,20 @@ const formatCurrency = (value) => {
 .product-buttons button:hover {
   background-color: #0056b3;
 }
+.pagination button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100px;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+ 
 </style>

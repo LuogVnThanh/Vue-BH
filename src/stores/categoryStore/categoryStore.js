@@ -13,7 +13,7 @@ export const useCategoryStore = defineStore("categoryStore", {
           "http://127.0.0.1:8000/api/cate/getall"
         );
 
-        console.log("response: ", response);
+        // console.log("response: ", response);
 
         this.categories = response.data; // gắn dữ liệu vào cate
       } catch (error) {
